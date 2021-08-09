@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/hello")
 public class HelloController {
 
-    // TODO：远程服务注入
-    //@Autowired
-    //private HelloService helloService;
+    @Autowired
+    private HelloService helloService;
 
     @GetMapping("sayHello")
     public String sayHello(){
-      //  helloService.sayMotto();
+        helloService.sayMotto();
         return "Hello world";
     }
 }
