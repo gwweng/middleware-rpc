@@ -1,5 +1,7 @@
 package com.middleware.rpc.registry;
 
+import com.middleware.rpc.config.RegistryProperties;
+
 /**
  * @author gengweiweng
  * @time 2021/8/5
@@ -13,7 +15,7 @@ public interface RegistryCenter {
      * @param info 信息
      * 注册结果
      */
-    long registryProvider(String apiInterface, String alias, String info);
+    long registryProvider(String apiInterface, String alias, String info, RegistryProperties registryProperties);
 
     /**
      * 获取生产者
@@ -21,6 +23,6 @@ public interface RegistryCenter {
      * @param alias 别名
      * @return 返回可用请求url
      */
-    String obtainProvider(String apiInterface, String alias);
+    String obtainProvider(String apiInterface, String alias, RegistryProperties registryProperties);
 
 }

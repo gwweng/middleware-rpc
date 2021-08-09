@@ -18,12 +18,10 @@ import redis.clients.jedis.JedisPoolConfig;
 @Component
 public class RedisRegistryCenter implements RegistryCenter {
 
-    @Autowired
-    private RegistryProperties registryProperties;
 
     private static  Jedis jedis;
 
-    private void init(){
+    private void init(RegistryProperties registryProperties){
         log.info("启动Redis模拟注册中心");
         // 池基本配置
         JedisPoolConfig config = new JedisPoolConfig();
@@ -42,15 +40,18 @@ public class RedisRegistryCenter implements RegistryCenter {
 
     }
     @Override
-    public long registryProvider(String apiInterface, String alias, String info) {
+    public long registryProvider(String apiInterface, String alias, String info, RegistryProperties registryProperties) {
         if(jedis == null){
-            init();
+            init(registryProperties);
         }
         return jedis.sadd(apiInterface + "_" + alias, info);
     }
 
     @Override
-    public String obtainProvider(String apiInterface, String alias) {
+    public String obtainProvider(String apiInterface, String alias, RegistryProperties registryProperties) {
+        if(jedis == null){
+            init(registryProperties);
+        }
         return jedis.srandmember(apiInterface + "_" + alias);
     }
 }

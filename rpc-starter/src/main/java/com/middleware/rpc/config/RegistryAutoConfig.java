@@ -1,13 +1,16 @@
 package com.middleware.rpc.config;
 
 import com.middleware.rpc.domain.LocalServerInfo;
+import com.middleware.rpc.registry.RedisRegistryCenter;
 import com.middleware.rpc.util.ExecutorUtils;
 import lombok.extern.slf4j.Slf4j;
 import com.middleware.rpc.network.server.RegistryServerSocket;
 import org.springframework.beans.BeansException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -40,5 +43,11 @@ public class RegistryAutoConfig implements ApplicationContextAware {
             }
         }
         log.info("初始化注册中心服务端完成，ip=>{}, port=>{}", LocalServerInfo.LOCAL_HOST, LocalServerInfo.LOCAL_PORT);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public RedisRegistryCenter setRedisRegistryCenter(){
+        return new RedisRegistryCenter();
     }
 }
