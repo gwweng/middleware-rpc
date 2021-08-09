@@ -13,7 +13,7 @@ public interface RegistryCenter {
      * @param info 信息
      * 注册结果
      */
-    void registryProvider(String apiInterface, String alias, String info);
+    long registryProvider(String apiInterface, String alias, String info);
 
     /**
      * 获取生产者

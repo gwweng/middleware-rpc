@@ -3,8 +3,6 @@ package com.middleware.rpc.registry;
 import com.middleware.rpc.config.RegistryProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.boot.context.properties.PropertyMapper;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -16,8 +14,8 @@ import redis.clients.jedis.JedisPoolConfig;
  * @time 2021/8/5
  * @desc
  */
-@Component
 @Slf4j
+@Component
 public class RedisRegistryCenter implements RegistryCenter {
 
     @Autowired
@@ -32,7 +30,7 @@ public class RedisRegistryCenter implements RegistryCenter {
         config.setMaxIdle(5);
         config.setTestOnBorrow(false);
         JedisPool jedisPool;
-        if(registryProperties.getPassword() != null){
+        if(registryProperties.getPassword() == null){
             jedisPool =  new JedisPool(config, registryProperties.getHost(), registryProperties.getPort());
         }else {
             jedisPool = new JedisPool(config, registryProperties.getHost(),
@@ -44,11 +42,11 @@ public class RedisRegistryCenter implements RegistryCenter {
 
     }
     @Override
-    public void registryProvider(String apiInterface, String alias, String info) {
+    public long registryProvider(String apiInterface, String alias, String info) {
         if(jedis == null){
             init();
         }
-        jedis.sadd(apiInterface + "_" + alias, info);
+        return jedis.sadd(apiInterface + "_" + alias, info);
     }
 
     @Override
