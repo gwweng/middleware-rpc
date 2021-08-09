@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ComponentScan("com.middleware.rpc")
+@ComponentScan("com.middleware.rpc.*")
 @Import(RegistryAutoConfig.class)
 public @interface EnableRPC {
 }
