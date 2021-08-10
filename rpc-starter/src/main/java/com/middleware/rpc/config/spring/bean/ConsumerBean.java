@@ -11,9 +11,7 @@ import com.middleware.rpc.registry.RedisRegistryCenter;
 import com.middleware.rpc.registry.RegistryCenter;
 import com.middleware.rpc.util.ClassLoaderUtils;
 import io.netty.channel.ChannelFuture;
-import lombok.Data;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -30,19 +28,16 @@ public class ConsumerBean<T> extends ConsumerConfig implements FactoryBean {
 
     private RpcProviderConfig rpcProviderConfig;
 
-
+    @Resource
+    RegistryProperties redisProperties;
 
     @Override
     public Object getObject() throws Exception {
-        RegistryProperties registryProperties = new RegistryProperties();
-        registryProperties.setHost("127.0.0.1");
-        registryProperties.setPassword("123456");
-        registryProperties.setPort(6379);
-        registryProperties.setTimeout(5);
+
         RegistryCenter registryCenter = new RedisRegistryCenter();
         //从redis获取链接
         if (null == rpcProviderConfig) {
-            String infoStr = registryCenter.obtainProvider(apiInterface, alias, registryProperties);
+            String infoStr = registryCenter.obtainProvider(apiInterface, alias, redisProperties);
             rpcProviderConfig = JSON.parseObject(infoStr, RpcProviderConfig.class);
         }
         assert null != rpcProviderConfig;
@@ -67,6 +62,7 @@ public class ConsumerBean<T> extends ConsumerConfig implements FactoryBean {
         request.setAlias(alias);
         Object proxy = JDKProxy.getProxy(ClassLoaderUtils.forName(apiInterface), request);
         return proxy;
+
     }
 
     @Override
